@@ -25,6 +25,7 @@ pipeline:
     repo: loeyt/drone-mailjet
     tags: 
       - ${DRONE_TAG}
+      - 0.1
     when:
       event: tag
 

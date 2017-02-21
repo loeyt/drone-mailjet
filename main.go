@@ -15,6 +15,7 @@ var Version = "dev"
 func main() {
 	app := cli.NewApp()
 	app.Name = "drone-mailjet"
+	app.Usage = "Notification plugin for Drone CI using the Mailjet Send API."
 	app.Version = Version
 	app.Action = run
 
