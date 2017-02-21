@@ -1,0 +1,30 @@
+workspace:
+  base: /go
+  path: src/loe.yt/drone-mailjet
+
+pipeline:
+
+  build:
+    image: golang:1.8
+    environment:
+      - CGO_ENABLED=0
+    commands:
+      - go build -ldflags='-X "main.Version=${DRONE_TAG=dev}+${DRONE_COMMIT_SHA:0:7}"' -tags netgo
+
+  publish-latest:
+    image: plugins/docker
+    repo: loeyt/drone-mailjet
+    tags: 
+      - latest
+    when:
+      branch: master
+      event: push
+
+  publish-tag:
+    image: plugins/docker
+    repo: loeyt/drone-mailjet
+    tags: 
+      - latest
+    when:
+      branch: master
+      event: tag
