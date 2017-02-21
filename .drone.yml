@@ -23,6 +23,8 @@ pipeline:
   publish-tag:
     image: plugins/docker
     repo: loeyt/drone-mailjet
+    username: ${DOCKER_USERNAME}
+    password: ${DOCKER_PASSWORD}
     tags: 
       - latest
     when:
