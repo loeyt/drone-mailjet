@@ -30,3 +30,7 @@ pipeline:
 
   notify:
     image: loeyt/drone-mailjet:0.1
+    when:
+      status:
+        - success
+        - failure
