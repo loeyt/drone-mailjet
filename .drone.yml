@@ -20,6 +20,15 @@ pipeline:
       branch: master
       event: push
 
+  # This is protection for the publish-tag step. If this starts to fail,
+  # update both test-tag and publish-tag steps.
+  test-tag:
+    image: alpine:3.5
+    commands:
+      - test ${DRONE_TAG} = 0.1.${DRONE_TAG##0.1.}
+    when:
+      event: tag
+
   publish-tag:
     image: plugins/docker
     repo: loeyt/drone-mailjet
