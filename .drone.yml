@@ -26,7 +26,6 @@ pipeline:
     username: ${DOCKER_USERNAME}
     password: ${DOCKER_PASSWORD}
     tags: 
-      - latest
+      - ${DRONE_TAG}
     when:
-      branch: master
       event: tag
