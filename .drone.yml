@@ -39,7 +39,13 @@ pipeline:
       event: tag
 
   notify:
-    image: loeyt/drone-mailjet:0.1
+    image: loeyt/drone-mailjet:latest
+    fromname: loe.yt Drone CI
+    fromemail: drone@loe.yt
+    recipientname: Luit van Drongelen
+    recipientemail: luitvd@gmail.com
+    template: 113576
+    subject: [${DRONE_REPO_NAME}] build ${DRONE_BUILD_STATUS}
     when:
       status:
         - success
