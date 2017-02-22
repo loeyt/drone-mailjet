@@ -45,7 +45,7 @@ pipeline:
     recipientname: Luit van Drongelen
     recipientemail: luitvd@gmail.com
     template: 113576
-    subject: [${DRONE_REPO_NAME}] build ${DRONE_BUILD_STATUS}
+    subject: "[${DRONE_REPO_NAME}] build ${DRONE_BUILD_STATUS}"
     when:
       status:
         - success
