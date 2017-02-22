@@ -86,8 +86,6 @@ func run(c *cli.Context) error {
 		},
 	}
 	res, err := mj.SendMail(email)
-	if err == nil {
-		fmt.Println(res)
-	}
+	fmt.Println(res)
 	return err
 }
