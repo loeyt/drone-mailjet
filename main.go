@@ -50,11 +50,6 @@ func main() {
 			EnvVar: "PLUGIN_RECIPIENTEMAIL",
 		},
 		cli.StringFlag{
-			Name:   "subject",
-			Usage:  "email subject",
-			EnvVar: "PLUGIN_SUBJECT",
-		},
-		cli.StringFlag{
 			Name:   "template",
 			Usage:  "email template",
 			EnvVar: "PLUGIN_TEMPLATE",
@@ -77,7 +72,7 @@ func run(c *cli.Context) error {
 	email := &mailjet.InfoSendMail{
 		FromEmail:          c.String("fromemail"),
 		FromName:           c.String("fromname"),
-		Subject:            c.String("subject"),
+		Subject:            fmt.Sprintf("[%s] build %s", os.Getenv("DRONE_REPO_NAME"), os.Getenv("DRONE_BUILD_STATUS")),
 		MjTemplateID:       c.String("template"),
 		MjTemplateLanguage: "true",
 		Recipients: []mailjet.Recipient{
@@ -92,6 +87,6 @@ func run(c *cli.Context) error {
 		},
 	}
 	res, err := mj.SendMail(email)
-	fmt.Println(res)
+	fmt.Printf("%#+v\n", res)
 	return err
 }
