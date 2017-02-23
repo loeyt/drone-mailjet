@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 
 	"github.com/mailjet/mailjet-apiv3-go"
 	"github.com/urfave/cli"
@@ -68,11 +69,21 @@ func run(c *cli.Context) error {
 	if c.String("password") == "" {
 		return fmt.Errorf("missing password")
 	}
+	vars := make(map[string]string)
+	for _, v := range os.Environ() {
+		i := strings.Index(v, "=")
+		if i < 0 {
+			continue
+		}
+		if strings.HasPrefix(v, "DRONE_") {
+			vars[v[:i]] = v[i+1:]
+		}
+	}
 	mj := mailjet.NewMailjetClient(c.String("username"), c.String("password"))
 	email := &mailjet.InfoSendMail{
 		FromEmail:          c.String("fromemail"),
 		FromName:           c.String("fromname"),
-		Subject:            fmt.Sprintf("[%s] build %s", os.Getenv("DRONE_REPO_NAME"), os.Getenv("DRONE_BUILD_STATUS")),
+		Subject:            fmt.Sprintf("[%s] build %s", vars["DRONE_REPO_NAME"], vars["DRONE_BUILD_STATUS"]),
 		MjTemplateID:       c.String("template"),
 		MjTemplateLanguage: "true",
 		Recipients: []mailjet.Recipient{
@@ -81,12 +92,13 @@ func run(c *cli.Context) error {
 				Email: c.String("recipientemail"),
 			},
 		},
-		Vars: map[string]string{
-			"DRONE_BUILD_STATUS": os.Getenv("DRONE_BUILD_STATUS"),
-			"DRONE_REPO_NAME":    os.Getenv("DRONE_REPO_NAME"),
-		},
+		Vars: vars,
 	}
 	res, err := mj.SendMail(email)
-	fmt.Printf("%#+v\n", res)
+	if err == nil {
+		for _, sent := range res.Sent {
+			fmt.Printf("email message sent to %s\n", sent.Email)
+		}
+	}
 	return err
 }
