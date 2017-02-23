@@ -67,6 +67,12 @@ func main() {
 }
 
 func run(c *cli.Context) error {
+	if c.String("username") == "" {
+		return fmt.Errorf("missing username")
+	}
+	if c.String("password") == "" {
+		return fmt.Errorf("missing password")
+	}
 	mj := mailjet.NewMailjetClient(c.String("username"), c.String("password"))
 	email := &mailjet.InfoSendMail{
 		FromEmail:          c.String("fromemail"),
